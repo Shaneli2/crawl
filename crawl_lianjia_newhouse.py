@@ -17,15 +17,17 @@ browser = [
 ]
 
 page = 1
-url = 'https://gz.fang.lianjia.com/loupan/pg' + str(page) + '/#contentList'
+
+#url = "https://gz.fang.lianjia.com/loupan/pg/{page}/#contentList"
 headers = {
     'Origin': 'https://gz.fang.lianjia.com',
     'Referer': 'https://gz.fang.lianjia.com/loupan/pg2/',
     'User-Agent': random.choice(browser)
 }
 
-while True:
+while page <= 59:
     time.sleep(2)
+    url = 'https://gz.fang.lianjia.com/loupan/pg' + str(page) + '/#contentList'
     res = requests.get(url, headers=headers)  # 抓取目标页面
     html = res.text
     soup = BeautifulSoup(html, 'html.parser')
@@ -52,7 +54,9 @@ while True:
         #price = item.find('em').text
         link = 'https://gz.fang.lianjia.com' + item.find('div', class_='resblock-name').find('a')['href']
         writer.writerow([title, type, saleStatus,add[0].strip(),add[1].strip(),add[2].strip(),room,area,price1,price2,other,link])
-        print("page %d of data extracted." % page)
+
+    print("page %d of data extracted." % page)
     page += 1
 
 csv_file.close()
+print("Extraction Done!")
